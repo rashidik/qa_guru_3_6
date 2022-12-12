@@ -4,12 +4,13 @@
 
 #Реализовать чтение и проверку содержимого каждого файла из архива в виде тестов
 import os, zipfile, csv, shutil
+import pathlib
 from pathlib import Path
 
 path_files = 'files'  # переменная с путём до папки где лежат файлы которые будем архивировать
 file_dir = os.listdir(path_files) # переменная возвращает список  содержащий имена файлов и директорий в каталоге path
-file_source = os.path.abspath(__file__)
-file_destination = '\resources'
+file_source = pathlib.Path.cwd()
+file_destination = 'resources'
 get_files = os.listdir(file_source)
 
 with zipfile.ZipFile('test.zip', mode='w', \
@@ -18,8 +19,8 @@ with zipfile.ZipFile('test.zip', mode='w', \
         add_file = os.path.join(path_files, file)
         zf.write(add_file)
 
-for g in get_files:
-    os.replace(file_source + g, file_destination + g)
+for file in Path(file_source).glob('test.zip'):
+    shutil.move(os.path.join(file_source, file), file_destination)
 
 
 
