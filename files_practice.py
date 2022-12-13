@@ -3,7 +3,7 @@
 #Положить его в ресурсы;
 
 #Реализовать чтение и проверку содержимого каждого файла из архива в виде тестов
-import os, zipfile, csv, shutil
+import os, zipfile, csv, shutil, re
 import pathlib
 from pathlib import Path
 
@@ -30,9 +30,15 @@ with zipfile.ZipFile('resources/test.zip') as ext:   # экстракция фа
     ext.extractall(extract_dir)
 
 
-with open('extract_dir/files/notam.pdf', 'rb') as pdf_file:
+with open('extract_dir/files/notam.pdf', 'rb') as pdf_file: #открываем пдф файл
     pdf_reader = PyPDF2.PdfFileReader(pdf_file)
 
-    pdf_page = pdf_reader.getPage(0)
-    print(pdf_page.extractText())
+    pdf_page = pdf_reader.getPage(0)   # открытие только 0 страницы
+    pdf_text_search = pdf_page.extractText() # оборачиваем открытый текст из пдф файла в переменную
+
+
+    # функция теста поиска слова в пдф файле
+    def test_search_word_in_pdf():
+        assert 'UTTTYOYX' in pdf_text_search
+
 
