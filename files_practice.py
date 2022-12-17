@@ -1,7 +1,12 @@
-import os, zipfile, csv, shutil, openpyxl
+import os, zipfile, csv, shutil, openpyxl, pytest
 import pathlib
 from pathlib import Path
 import PyPDF2
+
+@pytest.fixture()
+def delete_files_after_test(test_search_word_in_xlsx):
+    extract_path = 'extract_dir/files'
+    shutil.rmtree(extract_path)
 
 path_files = 'files'  # переменная с путём до папки где лежат файлы которые будем архивировать
 file_dir = os.listdir(path_files)  # переменная возвращает список  содержащий имена файлов и директорий в каталоге path
@@ -29,8 +34,6 @@ with open('extract_dir/files/notam.pdf', 'rb') as pdf_file:  # открывае�
     pdf_text_search = pdf_page.extractText()  # оборачиваем открытый текст из пдф файла в переменную
 
     # функция теста поиска слова в пдф файле
-
-
 def test_search_word_in_pdf():
     assert 'UTTTYOYX' in pdf_text_search
 
@@ -38,14 +41,20 @@ def test_search_word_in_pdf():
 with open('extract_dir/files/ceesve.csv', newline='') as csvfile:  # открываем csv файл
     ceesve = csv.reader(csvfile)
     csv_list = ' '.join(' '.join(map(str, l)) for l in ceesve)  # записываем содержание файла в строчную переменную
+
     # Тест поиска слова в csv
-
-
 def test_search_word_in_csv():
     assert 'trollolo' in csv_list
 
-
+xlsx = openpyxl.load_workbook('extract_dir/files/excel.xlsx')
+sheet = xlsx.active
+#тест поиска слова в xlsx файле
 def test_search_word_in_xlsx():
-    xlsx = openpyxl.load_workbook('extract_dir/files/excel.xlsx')
-    sheet = xlsx.active
     assert sheet.cell(row=4, column=2).value == 'james brown'
+
+
+extract_path = 'extract_dir/files'
+shutil.rmtree(extract_path)
+
+
+
