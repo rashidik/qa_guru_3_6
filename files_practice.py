@@ -3,10 +3,11 @@ import pathlib
 from pathlib import Path
 import PyPDF2
 
-@pytest.fixture()
-def delete_files_after_test(test_search_word_in_xlsx):
-    extract_path = 'extract_dir/files'
-    shutil.rmtree(extract_path)
+check_file_before_run_test = 'resources/test.zip'
+if os.path.exists(check_file_before_run_test):
+    os.remove(check_file_before_run_test)
+else:
+    pass
 
 path_files = 'files'  # переменная с путём до папки где лежат файлы которые будем архивировать
 file_dir = os.listdir(path_files)  # переменная возвращает список  содержащий имена файлов и директорий в каталоге path
@@ -55,6 +56,5 @@ def test_search_word_in_xlsx():
 
 extract_path = 'extract_dir/files'
 shutil.rmtree(extract_path)
-
 
 
